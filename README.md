@@ -12,6 +12,9 @@ Projeto desenvolvido como exemplo do Curso Completo de JavaScript na Udemy.com.
 bower install
 ```
 ```
+cd app
+```
+```
 npm install
 ```
 
