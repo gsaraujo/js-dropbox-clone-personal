@@ -9,7 +9,26 @@ class DropBoxController {
         this.nameFileEl = this.snackModalEl.querySelector('.filename');
         this.timeleftEl = this.snackModalEl.querySelector('.timeleft');
 
+        this.connectFirebase();
         this.initEvents();
+
+
+    }
+
+    connectFirebase(){
+
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      const firebaseConfig = {
+        apiKey: "AIzaSyCnM_gchfq_HJibZV0VFZ5flwk2N42UpI4",
+        authDomain: "js-dropbox-clone.firebaseapp.com",
+        databaseURL: "https://js-dropbox-clone-default-rtdb.firebaseio.com",
+        projectId: "js-dropbox-clone",
+        storageBucket: "js-dropbox-clone.appspot.com",
+        messagingSenderId: "765646872047",
+        appId: "1:765646872047:web:981f172a3b7f3266056a1a",
+        measurementId: "G-6K32TEGY35"
+      };
+      firebase.initializeApp(firebaseConfig);
 
     }
 
@@ -23,7 +42,17 @@ class DropBoxController {
 
         this.inputFilesEl.addEventListener('change', event => {
 
-            this.uploadTask(event.target.files);
+            this.uploadTask(event.target.files).then(responses => {
+                responses.forEach(resp => {
+
+                    //console.log(resp.files['input-file']);
+
+                    this.getFirebaseRef().push().set(resp.files['input-file']);
+
+                });
+
+                this.modalShow(false);
+            });
 
             this.modalShow();
 
@@ -31,6 +60,10 @@ class DropBoxController {
 
         });
 
+    }
+
+    getFirebaseRef(){
+        return firebase.database().ref('files');
     }
 
     modalShow(show = true){
@@ -53,7 +86,6 @@ class DropBoxController {
 
                 ajax.onload = event => {
 
-                    this.modalShow(false);
 
                     try {
                         resolve(JSON.parse(ajax.responseText))
@@ -67,7 +99,6 @@ class DropBoxController {
 
                 ajax.onerror = event => {
 
-                    this.modalShow(false);
                     reject(event);
 
                 };
