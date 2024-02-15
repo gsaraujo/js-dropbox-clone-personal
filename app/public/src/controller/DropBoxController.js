@@ -42,23 +42,33 @@ class DropBoxController {
 
         this.inputFilesEl.addEventListener('change', event => {
 
+            this.btnSendFileEl.disabled = true;
+
             this.uploadTask(event.target.files).then(responses => {
                 responses.forEach(resp => {
-
-                    //console.log(resp.files['input-file']);
 
                     this.getFirebaseRef().push().set(resp.files['input-file']);
 
                 });
 
-                this.modalShow(false);
+                uploadComplete();
+
+            }).catch(err=>{
+                uploadComplete();
+                console.error(err);
             });
 
             this.modalShow();
 
-            this.inputFilesEl.value = '';
-
         });
+
+    }
+
+    uploadComplete(){
+
+      this.modalShow(false);
+      this.inputFilesEl.value = '';
+      this.btnSendFileEl.disabled = false;
 
     }
 
