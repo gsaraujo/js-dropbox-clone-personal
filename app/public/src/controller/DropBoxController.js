@@ -400,9 +400,18 @@ class DropBoxController {
       li.dataset.key = key;
       li.dataset.file = JSON.stringify(file);
 
+	  let friendlyName;
+
+	  if (file.name) {
+		friendlyName = file.name;
+	  }
+	  else {
+		friendlyName = file[0].originalFilename;
+	  }
+
       li.innerHTML = `
         ${this.getFileIconView(file)}
-        <div class="name text-center">${file[0].originalFilename}</div>
+        <div class="name text-center">${friendlyName}</div>
       ` ;
 
       this.initEventsLi(li);
