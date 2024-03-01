@@ -504,10 +504,10 @@ class DropBoxController {
 
 			let file = JSON.parse(li.dataset.file);
 
-			switch (file.type) {
+			switch (file.mimetype) {
 				case 'folder':
 
-					this.currentFolder.push(file.name);
+					this.currentFolder.push(file.originalFilename);
 					this.openFolder();
 
 					break;
