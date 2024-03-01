@@ -74,8 +74,8 @@ class DropBoxController {
 
 			if (name) {
 				this.getFirebaseRef().push().set({
-					name,
-					type:'folder',
+					originalFilename:name,
+					mimetype:'folder',
 					path:this.currentFolder.join('/')
 				})
 			}
@@ -100,10 +100,7 @@ class DropBoxController {
 
 		this.btnRename.addEventListener('click', e=>{
 
-			//console.log(this.getSelection());
-
 			let li = this.getSelection()[0];
-			//console.log(this.getSelection()[0]);
 			let file = JSON.parse(li.dataset.file);
 
 			let name = prompt("Renomear o arquivo:", file.originalFilename);
@@ -463,10 +460,9 @@ class DropBoxController {
 
       li.dataset.key = key;
       li.dataset.file = JSON.stringify(file);
-	  let name = (file.mimetype == 'folder') ? file.name : file.originalFilename;
       li.innerHTML = `
         ${this.getFileIconView(file)}
-        <div class="name text-center">${name}</div>
+        <div class="name text-center">${file.originalFilename}</div>
       ` ;
 
       this.initEventsLi(li);
