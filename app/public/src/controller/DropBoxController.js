@@ -54,12 +54,27 @@ class DropBoxController {
 			let file = JSON.parse(li.dataset.file);
 			let key = li.dataset.key;
 
-			let formData = new FormData();
+			promises.push(new Promise((resolve, reject) => {
 
-			formData.append('path', file.filepath);
-			formData.append('key', key);
+				let fileRef = firebase.storage().ref(this.currentFolder.join('/')).child(file.name);
 
-			promises.push(this.ajax('/file', 'DELETE', formData));
+				fileRef.delete().then(()=>{
+
+					resolve({
+
+						fields: {
+							key
+						}
+
+					});
+
+
+
+				}).catch(err=>{
+					reject(err);
+				});
+
+			}));
 
 		});
 
@@ -497,14 +512,11 @@ class DropBoxController {
 		this.lastfolder = this.currentFolder.join('/');
 		this.getFirebaseRef().on('value', snapshot => {
 			this.listFilesEl.innerHTML = '';
-			//console.log(snapshot);
 
 			snapshot.forEach(snapshotItem => {
 
 				let key = snapshotItem.key;
 				let data = snapshotItem.val();
-
-				console.log(data);
 
 				if (data.type) {
 
